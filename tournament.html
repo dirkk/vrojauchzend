@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🏆 Kids Tournament</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ─── RESET & VARS ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sky:#e8f4fd;
+  --grass:#d4edda;
+  --sun:#ffe066;
+  --coral:#ff7f7a;
+  --blue:#5aadea;
+  --purple:#a77bdf;
+  --green:#52c878;
+  --orange:#ffaa44;
+  --pink:#f780b8;
+  --teal:#44c9b0;
+  --red:#e8574f;
+  --txt:#3a3a4a;
+  --txt-light:#6b6b7b;
+  --white:#ffffff;
+  --shadow:0 4px 18px rgba(0,0,0,.1);
+  --radius:18px;
+}
+
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--sky);
+  color:var(--txt);
+  min-height:100vh;
+  padding:28px 18px 60px;
+  /* subtle confetti-like pattern */
+  background-image:
+    radial-gradient(circle, var(--sun) 1.5px, transparent 1.5px),
+    radial-gradient(circle, var(--coral) 1px, transparent 1px),
+    radial-gradient(circle, var(--blue) 1px, transparent 1px),
+    radial-gradient(circle, var(--purple) 1.2px, transparent 1.2px);
+  background-size:120px 120px, 90px 110px, 150px 80px, 100px 140px;
+  background-position:0 0, 45px 60px, 30px 20px, 80px 90px;
+}
+
+/* ─── HEADER ─── */
+.header{text-align:center;margin-bottom:28px}
+.header h1{
+  font-family:'Fredoka',sans-serif;
+  font-size:2.8rem;font-weight:700;
+  background:linear-gradient(135deg,var(--coral),var(--orange),var(--purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.12));
+}
+.header p{color:var(--txt-light);font-size:.88rem;margin-top:4px;font-weight:600}
+
+/* ─── CARDS ─── */
+.card{
+  background:var(--white);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:24px;
+  border:2px solid transparent;
+  transition:transform .2s;
+}
+.card:hover{transform:translateY(-2px)}
+
+/* ─── UPLOAD ZONE ─── */
+#upload-section{max-width:500px;margin:0 auto 32px}
+.drop-zone{
+  border:3px dashed var(--blue);border-radius:var(--radius);
+  background:var(--white);padding:40px 20px;
+  text-align:center;cursor:pointer;
+  transition:background .2s,border-color .2s;
+  box-shadow:var(--shadow);
+}
+.drop-zone:hover,.drop-zone.dragover{background:#eef7ff;border-color:var(--purple)}
+.drop-zone .icon{font-size:2.6rem;margin-bottom:8px}
+.drop-zone p{color:var(--txt-light);font-size:.82rem;line-height:1.6}
+.drop-zone p strong{color:var(--txt)}
+#file-input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.drop-zone{position:relative}
+
+/* ─── BUTTONS ─── */
+.btn{
+  display:inline-block;font-family:'Fredoka',sans-serif;
+  font-size:.9rem;font-weight:600;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;border:none;border-radius:50px;
+  padding:10px 30px;cursor:pointer;
+  box-shadow:0 3px 10px rgba(90,173,234,.35);
+  transition:transform .15s,box-shadow .15s;
+  margin-top:14px;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 5px 16px rgba(90,173,234,.45)}
+.btn:active{transform:scale(.96)}
+.btn:disabled{background:#ccc;box-shadow:none;cursor:default;color:#fff}
+
+/* ─── STEP INDICATOR ─── */
+.steps{display:flex;justify-content:center;gap:12px;margin-bottom:28px;flex-wrap:wrap}
+.step{
+  font-family:'Fredoka',sans-serif;font-size:.78rem;font-weight:600;
+  background:var(--white);color:var(--txt-light);
+  border-radius:50px;padding:6px 16px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  border:2px solid transparent;transition:.2s;
+}
+.step.active{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 3px 12px rgba(90,173,234,.4)}
+.step.done{background:var(--green);color:#fff;border-color:var(--green)}
+
+/* ─── TEAM NAMING ─── */
+#naming-section{max-width:720px;margin:0 auto 32px}
+.naming-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.team-name-card{
+  background:var(--white);border-radius:14px;
+  box-shadow:var(--shadow);padding:16px;
+  border-top:5px solid var(--blue);
+  transition:transform .2s;
+}
+.team-name-card:hover{transform:translateY(-2px)}
+.team-name-card .members{font-size:.72rem;color:var(--txt-light);margin-bottom:8px;line-height:1.5}
+.team-name-card .members span{
+  display:inline-block;background:#f0f4ff;border-radius:20px;
+  padding:2px 9px;margin:1px 2px;font-weight:600;color:var(--blue);
+}
+.team-name-card input{
+  width:100%;border:2px solid #e0e0e0;border-radius:10px;
+  padding:7px 12px;font-family:'Nunito',sans-serif;font-size:.82rem;
+  font-weight:700;outline:none;transition:border-color .2s;
+  background:#fafafa;
+}
+.team-name-card input:focus{border-color:var(--purple);background:#fff}
+.team-name-card input::placeholder{color:#bbb}
+
+/* Team color strip on top – cycles */
+.tc-0{border-top-color:#ff7f7a}
+.tc-1{border-top-color:#5aadea}
+.tc-2{border-top-color:#a77bdf}
+.tc-3{border-top-color:#52c878}
+.tc-4{border-top-color:#ffaa44}
+.tc-5{border-top-color:#f780b8}
+.tc-6{border-top-color:#44c9b0}
+.tc-7{border-top-color:#e8574f}
+
+/* ─── SECTION TITLE ─── */
+.section-title{
+  font-family:'Fredoka',sans-serif;font-size:1.3rem;font-weight:600;
+  text-align:center;margin-bottom:18px;color:var(--txt);
+}
+.section-title span{
+  background:linear-gradient(135deg,var(--coral),var(--orange));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+/* ─── GROUP CARDS ─── */
+#groups-section{max-width:1100px;margin:0 auto 36px}
+.groups-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+.group-card{
+  background:var(--white);border-radius:var(--radius);
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.group-header{
+  font-family:'Fredoka',sans-serif;font-size:1rem;font-weight:700;
+  padding:10px 18px;color:#fff;text-align:center;letter-spacing:1px;
+}
+.gh-0{background:linear-gradient(135deg,#ff7f7a,#ffaa44)}
+.gh-1{background:linear-gradient(135deg,#5aadea,#a77bdf)}
+.gh-2{background:linear-gradient(135deg,#52c878,#44c9b0)}
+.gh-3{background:linear-gradient(135deg,#f780b8,#a77bdf)}
+
+/* Standings */
+.standings{width:100%;border-collapse:collapse}
+.standings th{
+  font-size:.68rem;font-weight:700;color:var(--txt-light);
+  text-transform:uppercase;letter-spacing:.6px;
+  padding:6px 8px 4px;border-bottom:2px solid #eee;text-align:center;
+}
+.standings th:first-child{text-align:left;padding-left:14px}
+.standings td{padding:7px 8px;font-size:.78rem;text-align:center;border-bottom:1px solid #f0f0f0;color:var(--txt)}
+.standings td:first-child{text-align:left;padding-left:14px;font-weight:700}
+.standings tr:last-child td{border-bottom:none}
+.standings .pos{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border-radius:50%;font-size:.7rem;font-weight:700;
+  margin-right:6px;background:#eee;color:var(--txt-light);
+}
+.standings .pos.adv{background:var(--green);color:#fff}
+.standings .pos.elim{background:#fdecea;color:var(--red)}
+
+/* Legend */
+.legend{display:flex;gap:16px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--txt-light);font-weight:600}
+.legend-dot{width:12px;height:12px;border-radius:50%}
+
+/* ─── GROUP MATCHES (score entry) ─── */
+#matches-section{max-width:1100px;margin:0 auto 36px}
+.matches-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.match-card{
+  background:var(--white);border-radius:14px;
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.match-card-header{
+  font-family:'Fredoka',sans-serif;font-size:.72rem;font-weight:600;
+  padding:5px 14px;background:#f5f5f5;color:var(--txt-light);
+}
+.match-row{
+  display:flex;align-items:center;padding:8px 12px;gap:6px;
+  border-bottom:1px solid #f0f0f0;
+}
+.match-row:last-child{border-bottom:none}
+.match-row .mn{flex:1;font-size:.78rem;font-weight:700;color:var(--txt)}
+.match-row .ms{
+  width:38px;height:30px;border:2px solid #e0e0e0;border-radius:8px;
+  text-align:center;font-family:'Fredoka',sans-serif;font-size:.9rem;
+  font-weight:600;outline:none;background:#fafafa;color:var(--txt);
+  transition:border-color .2s;
+}
+.match-row .ms:focus{border-color:var(--purple);background:#fff}
+.match-row.winner .mn{color:var(--green)}
+.match-row.winner .ms{border-color:var(--green);background:#eef9f2}
+
+/* ─── KO BRACKET ─── */
+#ko-section{max-width:1200px;margin:0 auto 40px}
+.bracket-wrap{display:flex;gap:0;align-items:stretch;overflow-x:auto;padding:14px 0}
+.bracket-round{
+  display:flex;flex-direction:column;justify-content:space-around;
+  min-width:200px;padding:0 6px;position:relative;
+}
+.bracket-round-title{
+  font-family:'Fredoka',sans-serif;font-size:.72rem;font-weight:700;
+  text-align:center;margin-bottom:10px;color:var(--txt-light);
+  text-transform:uppercase;letter-spacing:1px;
+}
+.bracket-match{
+  background:var(--white);border-radius:12px;box-shadow:var(--shadow);
+  overflow:hidden;margin:5px 0;border:2px solid transparent;
+  transition:border-color .2s;
+}
+.bracket-match:hover{border-color:var(--blue)}
+.bracket-match .b-row{
+  display:flex;align-items:center;padding:7px 10px;
+  border-bottom:1px solid #f0f0f0;gap:6px;
+}
+.bracket-match .b-row:last-child{border-bottom:none}
+.bracket-match .b-row .b-name{flex:1;font-size:.76rem;font-weight:700;color:var(--txt-light)}
+.bracket-match .b-row .b-score{
+  width:32px;height:26px;border:2px solid #e0e0e0;border-radius:6px;
+  text-align:center;font-family:'Fredoka',sans-serif;font-size:.82rem;
+  font-weight:600;outline:none;background:#fafafa;color:var(--txt);
+  transition:border-color .2s;
+}
+.bracket-match .b-row .b-score:focus{border-color:var(--purple);background:#fff}
+.bracket-match .b-row .b-score:disabled{background:#eee;border-color:#ddd;color:#bbb;cursor:default}
+.bracket-match .b-row .b-name:not(.empty){color:var(--txt)}
+.bracket-match .b-row.b-winner .b-name{color:var(--green)}
+.bracket-match .b-row.b-winner .b-score{border-color:var(--green);background:#eef9f2}
+.bracket-match .b-row .b-name.empty{color:#ccc;font-style:italic}
+.bracket-match .b-row .b-score:disabled.empty-score{background:#f5f5f5;color:#ccc}
+
+/* connector lines */
+.bracket-round:not(:last-child)::after{
+  content:'';position:absolute;right:-1px;top:0;bottom:0;
+  width:2px;background:linear-gradient(to bottom,transparent,var(--blue),transparent);
+}
+
+/* ─── CHAMPION ─── */
+.champion-box{
+  text-align:center;max-width:280px;margin:0 auto;
+  background:linear-gradient(135deg,#fff9e6,#fff3cc);
+  border:3px solid var(--orange);border-radius:22px;
+  padding:32px 24px;box-shadow:0 6px 24px rgba(255,170,68,.25);
+  animation:popIn .4s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.champion-box .trophy{font-size:3rem;margin-bottom:6px}
+.champion-box .champ-label{
+  font-family:'Fredoka',sans-serif;font-size:.72rem;
+  letter-spacing:2px;text-transform:uppercase;color:var(--orange);font-weight:700;margin-bottom:4px;
+}
+.champion-box .champ-name{
+  font-family:'Fredoka',sans-serif;font-size:1.7rem;font-weight:700;color:var(--txt);
+}
+
+/* ─── ERRORS / UTIL ─── */
+.hidden{display:none!important}
+.err{color:var(--red);font-size:.78rem;margin-top:8px;text-align:center;font-weight:600}
+.center{text-align:center}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🏆 Tournament Time!</h1>
+  <p>Upload your player list, name your teams, and play!</p>
+</div>
+
+<!-- STEP PILLS -->
+<div class="steps" id="steps">
+  <div class="step active" id="step-upload">1. Upload</div>
+  <div class="step" id="step-name">2. Name Teams</div>
+  <div class="step" id="step-groups">3. Group Phase</div>
+  <div class="step" id="step-ko">4. Knockout</div>
+</div>
+
+<!-- 1. UPLOAD -->
+<div id="upload-section">
+  <div class="drop-zone" id="drop-zone">
+    <div class="icon">📂</div>
+    <p><strong>Drop your CSV here</strong><br/>or click to browse<br/>
+    <span style="font-size:.7rem;color:#aaa">Format: Name;Level &nbsp;(Level 1, 2 or 3)</span></p>
+    <input type="file" id="file-input" accept=".csv,.txt"/>
+  </div>
+  <div id="error-msg" class="err hidden"></div>
+  <div class="center">
+    <button class="btn" id="upload-btn" disabled>Continue →</button>
+  </div>
+</div>
+
+<!-- 2. TEAM NAMING -->
+<div id="naming-section" class="hidden">
+  <div class="section-title">Give your teams a name! <span>✏️</span></div>
+  <div class="naming-grid" id="naming-grid"></div>
+  <div class="center" style="margin-top:20px">
+    <button class="btn" id="naming-btn">Start Tournament →</button>
+  </div>
+  <div id="naming-error" class="err hidden"></div>
+</div>
+
+<!-- 3. GROUP PHASE -->
+<div id="groups-section" class="hidden">
+  <div class="section-title">Group Phase <span>⚽</span></div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Advances</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--red);opacity:.5"></div>Eliminated</div>
+  </div>
+  <div class="groups-grid" id="groups-grid"></div>
+  <div style="margin-top:28px">
+    <div class="section-title">Enter Match Results <span>🎯</span></div>
+    <div class="matches-grid" id="matches-grid"></div>
+  </div>
+</div>
+
+<!-- 4. KO BRACKET -->
+<div id="ko-section" class="hidden">
+  <div class="section-title">Knockout Bracket <span>⚡</span></div>
+  <div class="bracket-wrap" id="bracket-wrap"></div>
+  <div id="champion-wrap" class="hidden" style="margin-top:28px"></div>
+</div>
+
+<script>
+/* ════════════════════════════════════════
+   STATE
+   ════════════════════════════════════════ */
+let csvText = null;
+let teams = [];          // { members:[], name:'' }
+let groups = [];         // { teams:[], matches:[], standing:[] }
+let koRounds = [];       // [{ matches:[{a,b,scoreA,scoreB}] }]
+let koAdvanced = [];     // teams entering KO
+
+/* ════════════════════════════════════════
+   UTILITY
+   ════════════════════════════════════════ */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function showErr(id,msg){const e=document.getElementById(id);e.textContent=msg;e.classList.remove('hidden')}
+function hideErr(id){document.getElementById(id).classList.add('hidden')}
+function setStep(n){
+  ['step-upload','step-name','step-groups','step-ko'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.classList.remove('active','done');
+    if(i<n)el.classList.add('done');
+    if(i===n)el.classList.add('active');
+  });
+}
+
+/* ════════════════════════════════════════
+   PARSE
+   ════════════════════════════════════════ */
+function parseCSV(text){
+  const lines=text.trim().split(/\r?\n/);
+  const players={1:[],2:[],3:[]};
+  for(const line of lines){
+    const p=line.split(';').map(s=>s.trim());
+    if(p.length<2)continue;
+    const name=p[0],level=parseInt(p[1],10);
+    if(![1,2,3].includes(level))continue;
+    if(name.toLowerCase()==='name')continue;
+    players[level].push(name);
+  }
+  return players;
+}
+
+function shuffleArr(a){
+  const r=[...a];
+  for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]]}
+  return r;
+}
+
+function buildTeams(players){
+  const s1=shuffleArr(players[1]),s2=shuffleArr(players[2]),s3=shuffleArr(players[3]);
+  const t=[];
+  for(let i=0;i<s1.length;i++) t.push({members:[s1[i],s2[i],s3[i]],name:''});
+  return t;
+}
+
+/* ════════════════════════════════════════
+   STEP 1 – UPLOAD
+   ════════════════════════════════════════ */
+const dropZone=document.getElementById('drop-zone');
+const fileInput=document.getElementById('file-input');
+fileInput.addEventListener('change',e=>{const f=e.target.files[0];if(f)f.text().then(onFile)});
+dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('dragover')});
+dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('dragover');const f=e.dataTransfer.files[0];if(f)f.text().then(onFile)});
+
+function onFile(text){
+  csvText=text;
+  hideErr('error-msg');
+  document.getElementById('upload-btn').disabled=false;
+}
+document.getElementById('upload-btn').addEventListener('click',()=>{
+  if(!csvText)return;
+  const players=parseCSV(csvText);
+  const counts=[players[1].length,players[2].length,players[3].length];
+  if(counts[0]===0||counts[0]!==counts[1]||counts[1]!==counts[2]){
+    showErr('error-msg','Each level must have the same number of names (found: L1='+counts[0]+', L2='+counts[1]+', L3='+counts[2]+')');
+    return;
+  }
+  teams=buildTeams(players);
+  document.getElementById('upload-section').classList.add('hidden');
+  document.getElementById('naming-section').classList.remove('hidden');
+  setStep(1);
+  renderNaming();
+});
+
+/* ════════════════════════════════════════
+   STEP 2 – NAME TEAMS
+   ════════════════════════════════════════ */
+function renderNaming(){
+  const grid=document.getElementById('naming-grid');
+  grid.innerHTML=teams.map((t,i)=>`
+    <div class="team-name-card tc-${i%8}">
+      <div class="members">${t.members.map(m=>'<span>'+esc(m)+'</span>').join('')}</div>
+      <input type="text" id="teamname-${i}" placeholder="Team name…" oninput="teams[${i}].name=this.value.trim()"/>
+    </div>`).join('');
+}
+document.getElementById('naming-btn').addEventListener('click',()=>{
+  // validate all names filled and unique
+  const names=teams.map(t=>t.name.trim());
+  if(names.some(n=>n==='')){showErr('naming-error','Please give every team a name!');return}
+  const unique=new Set(names.map(n=>n.toLowerCase()));
+  if(unique.size!==names.length){showErr('naming-error','All team names must be unique!');return}
+  teams.forEach((t,i)=>t.name=names[i]); // trim
+  hideErr('naming-error');
+  // build groups & matches
+  buildGroups();
+  document.getElementById('naming-section').classList.add('hidden');
+  document.getElementById('groups-section').classList.remove('hidden');
+  setStep(2);
+  renderGroupPhase();
+});
+
+/* ════════════════════════════════════════
+   STEP 3 – GROUPS
+   ════════════════════════════════════════ */
+function buildGroups(){
+  const n=teams.length;
+  let groupSize;
+  if(n%4===0)groupSize=4;
+  else if(n%3===0)groupSize=3;
+  else groupSize=3; // fallback
+
+  const shuffled=shuffleArr(teams);
+  const numGroups=Math.ceil(n/groupSize);
+  groups=[];
+  for(let g=0;g<numGroups;g++){
+    const members=shuffled.slice(g*groupSize,(g+1)*groupSize);
+    const matches=[];
+    for(let i=0;i<members.length;i++)
+      for(let j=i+1;j<members.length;j++)
+        matches.push({a:members[i],b:members[j],scoreA:null,scoreB:null});
+    groups.push({teams:members,matches,standing:[]});
+  }
+}
+
+function calcStanding(group){
+  const stats={};
+  group.teams.forEach(t=>{stats[t.name]={team:t,w:0,l:0,d:0,gf:0,ga:0,pts:0}});
+  group.matches.forEach(m=>{
+    if(m.scoreA===null||m.scoreB===null)return;
+    const sa=m.scoreA,sb=m.scoreB;
+    stats[m.a.name].gf+=sa;stats[m.a.name].ga+=sb;
+    stats[m.b.name].gf+=sb;stats[m.b.name].ga+=sa;
+    if(sa>sb){stats[m.a.name].w++;stats[m.b.name].l++}
+    else if(sb>sa){stats[m.b.name].w++;stats[m.a.name].l++}
+    else{stats[m.a.name].d++;stats[m.b.name].d++}
+  });
+  Object.values(stats).forEach(s=>{s.pts=s.w*3+s.d});
+  group.standing=Object.values(stats).sort((a,b)=>{
+    if(b.pts!==a.pts)return b.pts-a.pts;
+    const gdA=a.gf-a.ga,gdB=b.gf-b.ga;
+    if(gdB!==gdA)return gdB-gdA;
+    return b.gf-a.gf;
+  });
+}
+
+function renderGroupPhase(){
+  groups.forEach(g=>calcStanding(g));
+  renderStandings();
+  renderGroupMatches();
+}
+
+function renderStandings(){
+  const grid=document.getElementById('groups-grid');
+  const labels='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  grid.innerHTML=groups.map((g,gi)=>{
+    const rows=g.standing.map((s,idx)=>{
+      const advClass=idx<2?'adv':'elim';
+      return `<tr>
+        <td><span class="pos ${advClass}">${idx+1}</span>${esc(s.team.name)}</td>
+        <td>${s.w}</td><td>${s.d}</td><td>${s.l}</td>
+        <td>${s.pts}</td>
+        <td>${(s.gf-s.ga)>0?'+':''}${s.gf-s.ga}</td>
+      </tr>`;
+    }).join('');
+    return `<div class="group-card">
+      <div class="group-header gh-${gi%4}">Group ${labels[gi]}</div>
+      <table class="standings">
+        <thead><tr><th>Team</th><th>W</th><th>D</th><th>L</th><th>Pts</th><th>GD</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+  }).join('');
+}
+
+function renderGroupMatches(){
+  const grid=document.getElementById('matches-grid');
+  const labels='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let html='';
+  groups.forEach((g,gi)=>{
+    g.matches.forEach((m,mi)=>{
+      const aWin=m.scoreA!==null&&m.scoreB!==null&&m.scoreA>m.scoreB;
+      const bWin=m.scoreA!==null&&m.scoreB!==null&&m.scoreB>m.scoreA;
+      html+=`<div class="match-card">
+        <div class="match-card-header">Group ${labels[gi]} – Match ${mi+1}</div>
+        <div class="match-row ${aWin?'winner':''}">
+          <span class="mn">${esc(m.a.name)}</span>
+          <input class="ms" type="number" min="0" max="99" value="${m.scoreA!==null?m.scoreA:''}"
+            data-group="${gi}" data-match="${mi}" data-side="a" oninput="onGroupScore(event)"/>
+        </div>
+        <div class="match-row ${bWin?'winner':''}">
+          <span class="mn">${esc(m.b.name)}</span>
+          <input class="ms" type="number" min="0" max="99" value="${m.scoreB!==null?m.scoreB:''}"
+            data-group="${gi}" data-match="${mi}" data-side="b" oninput="onGroupScore(event)"/>
+        </div>
+      </div>`;
+    });
+  });
+  grid.innerHTML=html;
+}
+
+function onGroupScore(e){
+  const gi=parseInt(e.target.dataset.group);
+  const mi=parseInt(e.target.dataset.match);
+  const side=e.target.dataset.side;
+  const val=e.target.value.trim();
+  const num=val===''?null:parseInt(val,10);
+  groups[gi].matches[mi][side==='a'?'scoreA':'scoreB']=isNaN(num)?null:num;
+
+  // update standings live
+  groups.forEach(g=>calcStanding(g));
+  renderStandings();
+
+  // highlight winner in match cards without full re-render
+  const m=groups[gi].matches[mi];
+  const card=e.target.closest('.match-card');
+  const rows=card.querySelectorAll('.match-row');
+  if(m.scoreA!==null&&m.scoreB!==null){
+    rows[0].classList.toggle('winner',m.scoreA>m.scoreB);
+    rows[1].classList.toggle('winner',m.scoreB>m.scoreA);
+  } else {
+    rows[0].classList.remove('winner');
+    rows[1].classList.remove('winner');
+  }
+
+  // check if all group matches done → show KO
+  tryShowKO();
+}
+
+function allGroupMatchesDone(){
+  return groups.every(g=>g.matches.every(m=>m.scoreA!==null&&m.scoreB!==null));
+}
+
+function tryShowKO(){
+  if(!allGroupMatchesDone())return;
+  // collect top 2 per group
+  koAdvanced=[];
+  groups.forEach(g=>{ koAdvanced.push(g.standing[0].team); koAdvanced.push(g.standing[1].team); });
+  buildKO();
+  document.getElementById('ko-section').classList.remove('hidden');
+  setStep(3);
+  renderKO();
+}
+
+/* ════════════════════════════════════════
+   STEP 4 – KO BRACKET
+   ════════════════════════════════════════ */
+function buildKO(){
+  // seed: 1st of group A vs 2nd of group B, etc. (interleave)
+  let seeded=[];
+  const numGroups=groups.length;
+  for(let i=0;i<numGroups;i++){
+    // cross-pair: 1st of i vs 2nd of (i+1)%numGroups
+    seeded.push({a:groups[i].standing[0].team, b:groups[(i+1)%numGroups].standing[1].team, scoreA:null,scoreB:null});
+  }
+  // If odd number of advancing teams somehow (shouldn't be with top-2), handle bye
+  koRounds=[{matches:seeded}];
+  // build remaining empty rounds
+  let cnt=seeded.length;
+  while(cnt>1){cnt=Math.ceil(cnt/2);koRounds.push({matches:[]})}
+  // fill subsequent rounds with empty placeholders
+  for(let r=1;r<koRounds.length;r++){
+    const prevCount=koRounds[r-1].matches.length;
+    koRounds[r].matches=[];
+    for(let i=0;i<Math.ceil(prevCount/2);i++){
+      koRounds[r].matches.push({a:null,b:null,scoreA:null,scoreB:null});
+    }
+  }
+}
+
+function getKOWinner(round,matchIdx){
+  if(round>=koRounds.length)return null;
+  const m=koRounds[round].matches[matchIdx];
+  if(!m||m.scoreA===null||m.scoreB===null)return null;
+  if(m.scoreA===m.scoreB)return null; // tie – no winner yet
+  return m.scoreA>m.scoreB?m.a:m.b;
+}
+
+function propagateKO(){
+  // For each round after 0, set a/b from previous round winners
+  for(let r=1;r<koRounds.length;r++){
+    koRounds[r].matches.forEach((m,mi)=>{
+      const prevA=2*mi, prevB=2*mi+1;
+      const wA=prevA<koRounds[r-1].matches.length?getKOWinner(r-1,prevA):null;
+      const wB=prevB<koRounds[r-1].matches.length?getKOWinner(r-1,prevB):null;
+      // if team changed, reset scores
+      if(m.a!==wA||m.b!==wB){m.scoreA=null;m.scoreB=null}
+      m.a=wA;m.b=wB;
+    });
+  }
+}
+
+function renderKO(){
+  propagateKO();
+  const wrap=document.getElementById('bracket-wrap');
+  const roundLabels=['Round of 16','Quarter-Finals','Semi-Finals','Final'];
+  const totalRounds=koRounds.length;
+
+  wrap.innerHTML=koRounds.map((round,ri)=>{
+    const label=totalRounds<=4?(roundLabels[4-totalRounds+ri]||('Round '+(ri+1))): 'Round '+(ri+1);
+    const matchesHTML=round.matches.map((m,mi)=>{
+      const aName=m.a?esc(m.a.name):'<em>TBD</em>';
+      const bName=m.b?esc(m.b.name):'<em>TBD</em>';
+      const disabled=(!m.a||!m.b)?'disabled':'';
+      const aWin=m.scoreA!==null&&m.scoreB!==null&&m.scoreA>m.scoreB;
+      const bWin=m.scoreA!==null&&m.scoreB!==null&&m.scoreB>m.scoreA;
+      const aEmpty=!m.a?'empty':''
+      const bEmpty=!m.b?'empty':'';
+      return `<div class="bracket-match">
+        <div class="b-row ${aWin?'b-winner':''}">
+          <span class="b-name ${aEmpty}">${aName}</span>
+          <input class="b-score ${(!m.a||!m.b)?'empty-score':''}" type="number" min="0" max="99"
+            value="${m.scoreA!==null?m.scoreA:''}" ${disabled}
+            data-round="${ri}" data-match="${mi}" data-side="a" oninput="onKOScore(event)"/>
+        </div>
+        <div class="b-row ${bWin?'b-winner':''}">
+          <span class="b-name ${bEmpty}">${bName}</span>
+          <input class="b-score ${(!m.a||!m.b)?'empty-score':''}" type="number" min="0" max="99"
+            value="${m.scoreB!==null?m.scoreB:''}" ${disabled}
+            data-round="${ri}" data-match="${mi}" data-side="b" oninput="onKOScore(event)"/>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="bracket-round">
+      <div class="bracket-round-title">${label}</div>
+      ${matchesHTML}
+    </div>`;
+  }).join('');
+
+  // Champion?
+  const lastRound=koRounds[koRounds.length-1];
+  const finalMatch=lastRound&&lastRound.matches[0];
+  const champWrap=document.getElementById('champion-wrap');
+  if(finalMatch&&finalMatch.scoreA!==null&&finalMatch.scoreB!==null&&finalMatch.scoreA!==finalMatch.scoreB){
+    const champ=finalMatch.scoreA>finalMatch.scoreB?finalMatch.a:finalMatch.b;
+    champWrap.classList.remove('hidden');
+    champWrap.innerHTML=`<div class="champion-box">
+      <div class="trophy">🏆</div>
+      <div class="champ-label">Champion</div>
+      <div class="champ-name">${esc(champ.name)}</div>
+    </div>`;
+  } else {
+    champWrap.classList.add('hidden');
+  }
+}
+
+function onKOScore(e){
+  const ri=parseInt(e.target.dataset.round);
+  const mi=parseInt(e.target.dataset.match);
+  const side=e.target.dataset.side;
+  const val=e.target.value.trim();
+  const num=val===''?null:parseInt(val,10);
+  koRounds[ri].matches[mi][side==='a'?'scoreA':'scoreB']=isNaN(num)?null:num;
+
+  // highlight current match
+  const m=koRounds[ri].matches[mi];
+  const card=e.target.closest('.bracket-match');
+  const rows=card.querySelectorAll('.b-row');
+  if(m.scoreA!==null&&m.scoreB!==null){
+    rows[0].classList.toggle('b-winner',m.scoreA>m.scoreB);
+    rows[1].classList.toggle('b-winner',m.scoreB>m.scoreA);
+  }
+
+  // propagate and re-render subsequent rounds
+  renderKO();
+}
+</script>
+</body>
+</html>

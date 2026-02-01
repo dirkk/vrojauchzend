@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="nofollow, noindex">
+
+  <title>Vrojauchzend 2026</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+  </style>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Jost, sans-serif;
+    }
+
+    body {
+      font-family: Jost, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #333;
+      background: #ede8e0;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 470px;
+      min-height: 80vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero img {
+      bottom: 0;
+      box-shadow: none;
+      height: 100%;
+      left: 0;
+      margin: 0;
+      max-height: none;
+      max-width: none;
+      object-fit: cover;
+      outline: none;
+      padding: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100%;
+    }
+
+    .hero .black {
+      bottom: 0;
+      left: 0;
+      opacity: .5;
+      position: absolute;
+      right: 0;
+      top: 0;
+      opacity: 0.6;
+      background-color: #000;
+    }
+
+    .hero-content {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 80px;
+      padding: 0 60px;
+      max-width: 85rem;
+    }
+
+    .hero-title-block { 
+      flex-basis: 60%;
+    }
+
+    .hero-title-block h1 {
+      font-size: 4rem;
+      font-weight: 500;
+      color: #fff;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+
+    .hero-title-block .subtitle {
+      font-size: 2.5rem;
+      font-weight: normal;
+      color: #fff;
+    }
+
+    .hero-text-block {
+      flex-basis: 40%;
+      color: #fff;
+      font-size: 1.5rem;
+      line-height: 1.55;
+    }
+
+    .hero-text-block p { margin-bottom: 14px; }
+    .hero-text-block p:last-child { margin-bottom: 0; }
+
+    /* ─── BELOW-HERO CONTENT ─── */
+    .content {
+      background: #ede8e0;
+      padding: 48px 0 60px;
+      text-align: center;
+    }
+
+    .content h2 {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 16px;
+    }
+    .content div {
+      padding: 0 16px;
+      margin-bottom: 12px;
+      font-size: 1.4rem;
+      color: #444;
+      line-height: 1.6;
+      display: flex;
+      justify-content: center;
+    }
+
+    .content p {
+      padding: 0 16px;
+      font-size: 1.4rem;
+      color: #444;
+      line-height: 1.6;
+      max-width: 80rem;
+      margin: 25px auto;
+    }
+
+    .content a {
+      color: rgb(77, 72, 72);
+      text-decoration: underline;
+    }
+
+    .content a:hover {
+      text-decoration-style: dashed;
+    }
+
+    .photo-row {
+      gap: clamp(1.5rem, 6vw, 2rem);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .photo-row img {
+      margin: 0;
+      max-width: 95%;
+    }
+
+
+
+    .maps-link { margin-top: 20px; }
+
+    .odd {
+      background-color: rgb(248, 236, 234);
+    }
+
+    .even {
+      background-color: rgb(248, 250, 249);
+    }
+
+    /* ─── GALLERY SECTION ─── */
+    .gallery-section {
+      background: #ede8e0;
+      padding: 40px 16px 60px;
+      text-align: center;
+    }
+
+    .gallery-section h2 {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 24px;
+    }
+
+    .gallery-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .gallery-grid img {
+      width: calc(25% - 8px);
+      min-width: 140px;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: opacity 0.2s;
+    }
+
+    .gallery-grid img:hover { opacity: 0.8; }
+
+    /* ─── MODAL ─── */
+    #gallery-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(0, 0, 0, 0.9);
+      align-items: center;
+      justify-content: center;
+    }
+
+    #gallery-modal.open { display: flex; }
+
+    #gallery-modal img {
+      max-width: 90vw;
+      max-height: 85vh;
+      object-fit: contain;
+      display: block;
+    }
+
+    .modal-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      width: 48px;
+      height: 80px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: background 0.2s;
+      z-index: 1;
+    }
+
+    .modal-arrow:hover { background: rgba(255, 255, 255, 0.3); }
+    .modal-arrow.prev  { left: 12px; }
+    .modal-arrow.next  { right: 12px; }
+
+    .modal-close {
+      position: fixed;
+      top: 16px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      z-index: 1;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .modal-close:hover { opacity: 1; }
+
+    .modal-counter {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.85rem;
+      z-index: 1;
+    }
+
+    /* ─── PASSWORD OVERLAY ─── */
+    #password-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgb(248, 236, 234);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    #password-overlay h2 {
+      color: #350707;
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+
+    #password-overlay input {
+      padding: 10px 16px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 4px;
+      width: 240px;
+      outline: none;
+    }
+
+    #password-overlay .error {
+      color: #e88;
+      font-size: 0.82rem;
+      height: 1.2em;
+    }
+
+    .locked { visibility: hidden; }
+
+     /* ─── RESPONSIVE ─── */
+    @media (max-width: 880px) {
+      .hero-content {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── HERO ─── -->
+<section class="hero locked">
+  <img src="https://vrojauchzend.de/wp-content/uploads/2024/12/IMG_2947.jpg" alt="VroJAuchzenD" />
+  <span aria-hidden="true" class="black"></span>
+  <div class="hero-content">
+    <div class="hero-title-block">
+      <h1>VroJAuchzenD</h1>
+      <span class="subtitle">5. bis 7. Juni 2026</span>
+    </div>
+    <div class="hero-text-block">
+      <p>Wir wollen euch sehen, mit euch feiern, Musik machen, quatschen, diskutieren, Yoga machen, kochen, tanzen, … lasst uns wieder „vrojauchzend" Zeit verbringen!</p>
+      <p>Die Erinnerungen an unser letztes VroJAuchzenD beseelt uns noch heute!</p>
+      <p>So möchten wir euch vom <strong>5. - 7. Juni 2026</strong> (Fronleichnamswochenende) nach Dischingen (in der Nähe von Heidenheim, 1 Stunde nördlich von Ulm) zu „VroJAuchzenD" einladen!</p>
+      <p>Vroni, Johannes, Aurelia, Dirk und alle Kinder</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONTENT ─── -->
+<div class="content locked odd">
+  <h2>Wo?</h2>
+  <p>Wir treffen uns auf dem <a href="https://www.dischingen.de/zeltplatz-karlsbrunnen.html">Zeltplatz Karlsbrunnen</a> in der Metropole Dischingen. Wir sind umgeben von Wäldern, Wiesen und Teichen.</p>
+  <p>Wir befinden uns auf einem einfachen Zeltplatz mit insgesamt 2 Duschen, 2 Frauen WCs, 2 Herren WCs und 3 Pinkelbecken und einem WC für Menschen mit Behinderung. An einem Haus befindet sich ein langer Trog mit insgesamt 6 Wasserhähnen. 
+    Strom ist ebenso vorhanden mit mehreren 230V Steckdosen. Wir werden dieses ja einen Handyladeplatz vor dem Duschhäuschen anbieten, wo ihr bei Bedarf euer Handy laden könnt. Denkt bitte gegenenfalls daran Kabeltrommeln mitzubringen, da die Stromanschlüsse einige Entfernung von den Zelt- und Standplätzen entfernt sind.</p>
+  <p>Ihr braucht also ein Zelt, Auto, Bus oder eine andere Schlafmöglichkeit und kümmert euch bitte selbst ums Essen. Vor Ort werden wir ein kleines Kochzelt (Herdplatten und AirFryer vorhanden, Töpfe und Bestecke bitte selber mitbringen) aufstellen sowie einen Kühlwagen mit Getränken gegen Unkostenbeitrag.</p>
+
+  <div class="photo-row">
+    <img src="pictures/general/Blick-zum-ueberdachten-Sitz.jpg" alt="Blick zum überdachten Sitzplatz" />
+    <img src="pictures/general/Teich-mit-Springbrunnen.jpg" alt="Karlsbrunnen" />
+  </div>
+  <div class="photo-row">
+    <img src="pictures/general/Grillstelle.jpg" alt="Grillstelle" />
+    <img src="pictures/general/Teich.jpg" alt="Teich" />
+  </div>
+
+  <h2>Karte</h2>
+  <iframe width="100%" height="400" src="https://www.openstreetmap.org/export/embed.html?bbox=10.35791873931885%2C48.68671081884975%2C10.426368713378908%2C48.70401849770682&amp;layer=mapnik&amp;marker=48.69536540205368%2C10.392143726348877"></iframe><br/><small><a href="https://www.openstreetmap.org/?mlat=48.69537&amp;mlon=10.39214#map=16/48.69537/10.39214&amp;layers=N" target="_blank">Größere Karte anzeigen in OpenStreetMap</a></small>
+  <p class="maps-link">Hier ist noch der Link zu Google Maps: <a href="https://maps.app.goo.gl/z6GNeNJWsE5Mr27w7" target="_blank">https://maps.app.goo.gl/z6GNeNJWsE5Mr27w7</a></p>
+</div>
+<div class="content locked even">
+  <h2 style="margin-top: 36px;">Programm</h2>
+  <p>VroJAuchzenD ist ein Festival von und mit euch und lebt von euren Beiträgen. Wir freuen uns, wenn ihr einen Workshop, Musik, Sport, Yoga oder irgendetwas anderes anbieten wllt an dem viele Menschen Spaß haben.</p>
+  <p>Überlegt euch gerne etwas und gebt uns Bescheid - Entweder per Mail an <a href="mailto:vrojauchzend@posteo.de">vrojauchzend@posteo.de</a> oder per euch bekannten Handynummern.</p>
+  <p>Wir werden das genaue Programm wieder vor Ort planen. Hier ein kleiner Rückblick, wie unser Programmtafel 2025 aussah:</p>
+  <div><img src="pictures/2025/20250530_214144.jpg" alt="Programmtafel 2025" width="1400" style="max-width: 100%;"/></div>
+</div>
+
+<!-- ─── PHOTO GALLERY ─── -->
+<section class="gallery-section content locked odd">
+  <h2>Impressionen von 2025</h2>
+  <p>Hier ein paar Eindrücke aus dem letzten Jahr. Bitte teilt die Fotos nicht weiter im Internet oder Social Media, sie sind für euren persönlichen Gebrauch und um gegebenenfalls einen Eindruck zu bekommen falls ihr noch nie beim VroJAuchzenD wart. Die Webseite ist daher auch passwortgeschützt.</p>
+  <div class="gallery-grid" id="gallery-grid">
+    <!-- thumbnails injected by JS -->
+  </div>
+</section>
+
+<!-- ─── GALLERY MODAL ─── -->
+<div id="gallery-modal">
+  <button class="modal-close" id="modal-close">&times;</button>
+  <button class="modal-arrow prev" id="modal-prev">&#8249;</button>
+  <img id="modal-img" src="" alt="" />
+  <button class="modal-arrow next" id="modal-next">&#8250;</button>
+  <span class="modal-counter" id="modal-counter"></span>
+</div>
+
+<!-- ─── PASSWORD OVERLAY ─── -->
+<div id="password-overlay">
+  <h2>Bitte Passwort eingeben</h2>
+  <input type="password" id="pw-input" autocomplete="off" placeholder="Passwort" autofocus />
+  <span class="error" id="pw-error"></span>
+</div>
+
+<script>
+// ─── PASSWORD ───────────────────────────────────────────
+var pwInput  = document.getElementById('pw-input');
+var pwError  = document.getElementById('pw-error');
+var pwOverlay = document.getElementById('password-overlay');
+
+pwInput.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') {
+    // freunde
+    if (window.btoa(pwInput.value) === 'ZnJldW5kZQ==' || window.btoa(pwInput.value) === 'RnJldW5kZQ==') {
+      pwOverlay.style.display = 'none';
+      document.querySelectorAll('.locked').forEach(function (el) {
+        el.classList.remove('locked');
+      });
+    } else {
+      pwError.textContent = 'Falsches Passwort';
+      pwInput.value = '';
+      pwInput.focus();
+    }
+  }
+});
+
+// ─── GALLERY ────────────────────────────────────────────
+// → Edit this array to add your photo file paths:
+var photos = [
+  'pictures/2025/20250530_214144.jpg',
+  'pictures/2025/20250530_151853.jpg',
+  'pictures/2025/20250530_152919.jpg',
+  'pictures/2025/20250530_171902.jpg',
+  'pictures/2025/20250530_183604.jpg',
+  'pictures/2025/20250530_184035.jpg',
+  'pictures/2025/20250531_154010_2.jpg',
+  'pictures/2025/Gruppenfoto_VroJauchzenD_2025.jpg',
+  'pictures/2025/IMG_5428.jpg',
+  'pictures/2025/IMG_5445.jpg',
+  'pictures/2025/IMG_5470.jpg',
+  'pictures/2025/IMG_5491.jpg',
+  'pictures/2025/IMG_5562.jpg',
+  'pictures/2025/IMG_5579.jpg',
+  'pictures/2025/IMG_5598.jpg',
+  'pictures/2025/IMG_5676.jpg',
+  'pictures/2025/IMG_5692.jpg',
+  'pictures/2025/IMG_5704.jpg',
+  'pictures/2025/IMG_5731.jpg',
+  'pictures/2025/IMG_5801.jpg',
+  'pictures/2025/IMG_20250530_231518399_HDR.jpg',
+  'pictures/2025/IMG_20250531_173644.jpg',
+  'pictures/2025/IMG_20250531_110355299_HDR.jpg',
+  'pictures/2025/IMG_20250531_183508590_HDR.jpg'
+];
+
+var grid        = document.getElementById('gallery-grid');
+var modal       = document.getElementById('gallery-modal');
+var modalImg    = document.getElementById('modal-img');
+var modalClose  = document.getElementById('modal-close');
+var modalPrev   = document.getElementById('modal-prev');
+var modalNext   = document.getElementById('modal-next');
+var modalCount  = document.getElementById('modal-counter');
+var current     = 0;
+
+// Build thumbnail grid
+photos.forEach(function (src, i) {
+  var img = document.createElement('img');
+  img.src = src;
+  img.alt = '';
+  img.addEventListener('click', function () { openModal(i); });
+  grid.appendChild(img);
+});
+
+function openModal(index) {
+  current = index;
+  modalImg.src = photos[current];
+  modalCount.textContent = (current + 1) + ' / ' + photos.length;
+  modal.classList.add('open');
+}
+
+function closeModal() {
+  modal.classList.remove('open');
+}
+
+function showNext() {
+  current = (current + 1) % photos.length;
+  modalImg.src = photos[current];
+  modalCount.textContent = (current + 1) + ' / ' + photos.length;
+}
+
+function showPrev() {
+  current = (current - 1 + photos.length) % photos.length;
+  modalImg.src = photos[current];
+  modalCount.textContent = (current + 1) + ' / ' + photos.length;
+}
+
+modalClose.addEventListener('click', closeModal);
+modalNext.addEventListener('click', showNext);
+modalPrev.addEventListener('click', showPrev);
+
+// Click dark background → close
+modal.addEventListener('click', function (e) {
+  if (e.target === modal) closeModal();
+});
+
+// Keyboard: Escape, ← →
+document.addEventListener('keydown', function (e) {
+  if (!modal.classList.contains('open')) return;
+  if (e.key === 'Escape')     closeModal();
+  if (e.key === 'ArrowRight') showNext();
+  if (e.key === 'ArrowLeft')  showPrev();
+});
+</script>
+
+</body>
+</html>
