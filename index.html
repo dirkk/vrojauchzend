@@ -399,21 +399,32 @@ var pwInput  = document.getElementById('pw-input');
 var pwError  = document.getElementById('pw-error');
 var pwOverlay = document.getElementById('password-overlay');
 
-pwInput.addEventListener('keydown', function (e) {
-  if (e.key === 'Enter') {
-    // freunde
-    if (window.btoa(pwInput.value) === 'ZnJldW5kZQ==' || window.btoa(pwInput.value) === 'RnJldW5kZQ==') {
-      pwOverlay.style.display = 'none';
-      document.querySelectorAll('.locked').forEach(function (el) {
-        el.classList.remove('locked');
-      });
-    } else {
-      pwError.textContent = 'Falsches Passwort';
-      pwInput.value = '';
-      pwInput.focus();
+function showLocked() {
+  pwOverlay.style.display = 'none';
+  document.querySelectorAll('.locked').forEach(function (el) {
+    el.classList.remove('locked');
+  });
+}
+
+var savedPassphrase = localStorage.getItem("passphrase");
+if (savedPassphrase === 'ZnJldW5kZQ==' || savedPassphrase === 'RnJldW5kZQ==') {
+  showLocked();
+} else {
+  pwInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      var passphrase = window.btoa(pwInput.value);
+      if (passphrase === 'ZnJldW5kZQ==' || passphrase === 'RnJldW5kZQ==') {
+        localStorage.setItem('passphrase', passphrase);
+        showLocked();
+      } else {
+        pwError.textContent = 'Falsches Passwort';
+        pwInput.value = '';
+        pwInput.focus();
+      }
     }
-  }
-});
+  });
+}
+
 
 // ─── GALLERY ────────────────────────────────────────────
 // → Edit this array to add your photo file paths:
